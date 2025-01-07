@@ -825,7 +825,7 @@ Genki.jisho = {
     { ja : '化粧品|けしょうひん', en : 'cosmetics; toilet articles', l : '会L14' },
     { ja : '消す|けす', en : 'to turn off; to erase', v : 'u', l : '会L14' },
     { ja : 'げた', en : 'wooden clogs', l : '会L20' },
-    { ja : 'ケチ|けち（な）', en : 'stingy; cheap', l : '会14' },
+    { ja : 'ケチ|けち（な）', en : 'stingy; cheap', l : '会L14' },
     { ja : '結果|けっか', en : 'result', l : '読L23-II' },
     { ja : '結構です|けっこうです', en : "That would be fine.; That wouldn't be necessary.", l : '会L6' },
     { ja : '結婚式|けっこんしき', en : 'wedding', l : '会L15' },

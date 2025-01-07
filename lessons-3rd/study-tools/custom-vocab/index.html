@@ -78,7 +78,34 @@
           <li><input id="noStudyWarning" type="checkbox" onchange="Genki.tools.settings.handleCheckbox(this);"><label for="noStudyWarning">Do not warn me</label></li>
           <li><input id="showSentenceField" type="checkbox" onchange="Genki.tools.settings.toggleSentences(this);"><label for="showSentenceField">Show sentence fields</label></li>
         </ul>
-        
+
+        <h3 id="chapter-select" class="sub-title">Chapter Selector</h3>
+        <p>Input a selection of chapters you want to study the vocabulary for. Then check the boxes of what sections of those chapters you want to study.</p>
+        <input type="text" placeholder="eg. 5, 7, 11-13" id="chapter-select-input"></input><br>
+        <label>Include vocab from the following sections of selected chapters:</label>
+        <div id="section-select-cbs">
+          <input type="checkbox" id="cb-会" onclick="Genki.tools.showCheckboxes(this);"/>
+          <label for="cb-会">Conversation/Grammar</label>
+          <br>
+          <div id="extra-conversation-sections" style="display:none">
+            <input type="checkbox" id="cb-(e)"/>
+            <label for="cb-expressions">Useful Expressions</label>
+          </div>
+          <br>
+          <input type="checkbox" id="cb-読" onclick="Genki.tools.showCheckboxes(this);"/>
+          <label for="cb-読">Reading/Writing</label>
+          <br>
+          <div id="extra-reading-sections" style="display:none">
+            <input type="checkbox" id="cb-漢字表"/>
+            <label for="cb-読-kanji">Kanji Reading</label>
+            <br>
+            <input type="checkbox" id="cb-ワークブック"/>
+            <label for="cb-expressions">Workbook</label>
+            <br>
+          </div>
+        </div>
+        <button id="chapter-select-btn" onclick="Genki.tools.selectChapters();" class="button"><i class="fa">&#xf040;</i>Select Chapters</button><br>
+
         <div class="center">
           <button class="button" onclick="Genki.tools.study();"><i class="fa">&#xf040;</i>Study</button>
         </div><br>
@@ -124,8 +151,9 @@
     <script src="../../../resources/javascript/easytimer.min.js"></script>
     <script src="../../../resources/javascript/exercises/3rd-ed.min.js"></script>
     <script src="../../../resources/javascript/genki.min.js"></script>
-    <script src="../../../resources/javascript/study-tools.min.js"></script>
+    <script src="../../../resources/javascript/study-tools.js"></script>
     <script src="../../../resources/javascript/all.min.js"></script>
+    <script src="../../../resources/javascript/jisho.js"></script>
     <script>
       Genki.tools.type = 'vocab';
       Genki.tools.settings.restore();

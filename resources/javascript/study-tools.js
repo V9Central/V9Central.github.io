@@ -214,6 +214,123 @@
       }
     },
 
+    showCheckboxes : function () {
+      if (this.id == "cb-読") {
+        document.getElementById("extra-reading-sections").style = ""
+      }
+      if (this.id == "cb-会") {
+        document.getElementById("extra-conversation-sections").style = ""
+      }
+    },
+
+    rangeParse : function (input) {
+      const output = [];
+      if (input == "") {
+        input = "1-23"
+      }
+      let start = input.split("-")[0]
+      let end = input.split("-")[1]
+      end++
+      for (let i = start; i < end; i++) {
+        output.push(i);
+      }
+      return output;
+    },
+  
+    selectChapters : function () {
+      const range = document.getElementById("chapter-select-input").value.split(",")
+
+      let parsedRange = [];
+      
+      for (const item of range) {
+        if (item.includes("-")) {
+          parsedRange.push(this.rangeParse(item))
+        }else {
+          parsedRange.push(item)
+        }
+      }
+      document.getElementById('study-tool-json').value = parsedRange.join(",");
+      this.jishoParser(parsedRange);
+    },
+/*
+    jishoParser : function (searchRange) {
+      //let kana_list = [];
+      let vocab = [];
+      for (const cb of document.getElementById("section-select-cbs").childNodes){
+        if (cb.checked) {
+          vocab.unshift(cb.id.replace("cb-", ""))
+        }
+      }
+      if (vocab.length == 0) {
+        window.alert("Please check the boxes of the sections you want to study vocab from.")
+        return
+      }
+      for (const [mora, dictionaryItems] of Object.entries(Genki.jisho)) {
+        console.log(mora);
+        for (const dictionaryItem of dictionaryItems) {
+
+          for (let lesson of dictionaryItem.l.split(",")) {
+            lesson = lesson.trim();
+            let lessonParts = /^(.*)L(\d*)(.*)$/.exec(lesson);
+            if (lessonParts) {
+              let lessonSection = lessonParts[1];
+              let lessonNumber = lessonParts[2];
+              let lessonSubsection = lessonParts[3];
+              if (lessonSection.includes("ワークブック") && lessonSection.includes("読")) {
+                lessonSection = lessonSection.replace("読", "")
+              }
+              if (lessonSubsection.includes("-")) {
+                lessonSubsection = lessonSubsection.replace("-", "")
+              }
+              if (searchRange.includes(lessonNumber) && vocab.includes(lessonSection) && vocab.includes(lessonSubsection)) {
+                console.log(dictionaryItem)
+              }
+            }else{
+              console.log("Could not parse: " + dictionaryItem.l)
+            }
+          }
+        }
+      }
+      //document.getElementById('study-tool-json').value = kana_list.join(",");
+    },
+*/
+    jishoParser : function (searchRange) {
+      for (const [mora, dictionaryItems] of Object.entries(Genki.jisho)) {
+        console.log(mora);
+        for (const dictionaryItem of dictionaryItems) {
+          for (let lesson of dictionaryItem.l.split(",")) {
+            lesson = lesson.trim();
+            let lessonParts = ""
+            if (lesson != "会G" && lesson != "Grammar Index" && lesson != "巻末") {
+              lessonParts = /^(.*)L(\d*)(.*)$/.exec(lesson);
+              if (lessonParts) {
+                let lessonSection = lessonParts[1];
+                let lessonNumber = lessonParts[2];
+                let lessonSubsection = lessonParts[3];
+                if (lessonSection.includes("ワークブック") && lessonSection.includes("読")) {
+                  lessonSection = lessonSection.replace("読", "")
+                }
+                if (lessonSubsection.includes("-")) {
+                  lessonSubsection = lessonSubsection.replace("-", "")
+                }
+                if (searchRange.includes(lessonNumber) && dictionaryItem.l.includes(lessonSection) && dictionaryItem.l.includes(lessonSubsection)) {
+                  console.log("yay!!!" + dictionaryItem.ja)
+                }
+              }else {
+                console.log("Could not parse: " + dictionaryItem.l)
+              }
+            }
+            
+            
+          }
+        }
+      }
+    },
+    /*
+    parse l from jisho
+    make checkboxes for sections of lessons
+    for loop over genki.jisho[*]
+    */
 
     // initialize the study session after asking for confirmation
     study : function () {
