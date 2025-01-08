@@ -214,12 +214,21 @@
       }
     },
 
-    showCheckboxes : function () {
-      if (this.id == "cb-読") {
-        document.getElementById("extra-reading-sections").style = ""
+    showCheckboxes : function (section) {
+      if (section.id == "cb-読" && section.checked) {
+        document.getElementById("extra-reading-sections").style = "display:normal"
       }
-      if (this.id == "cb-会") {
-        document.getElementById("extra-conversation-sections").style = ""
+      
+      if (section.id == "cb-読" && !section.checked) {
+        document.getElementById("extra-reading-sections").style = "display:none"
+      }
+
+      if (section.id == "cb-会" && section.checked) {
+        document.getElementById("extra-conversation-sections").style = "display:normal"
+      }
+
+      if (section.id == "cb-会" && !section.checked) {
+        document.getElementById("extra-conversation-sections").style = "display:none"
       }
     },
 
@@ -252,84 +261,72 @@
       document.getElementById('study-tool-json').value = parsedRange.join(",");
       this.jishoParser(parsedRange);
     },
-/*
-    jishoParser : function (searchRange) {
-      //let kana_list = [];
-      let vocab = [];
-      for (const cb of document.getElementById("section-select-cbs").childNodes){
-        if (cb.checked) {
-          vocab.unshift(cb.id.replace("cb-", ""))
-        }
-      }
-      if (vocab.length == 0) {
-        window.alert("Please check the boxes of the sections you want to study vocab from.")
-        return
-      }
-      for (const [mora, dictionaryItems] of Object.entries(Genki.jisho)) {
-        console.log(mora);
-        for (const dictionaryItem of dictionaryItems) {
 
-          for (let lesson of dictionaryItem.l.split(",")) {
-            lesson = lesson.trim();
-            let lessonParts = /^(.*)L(\d*)(.*)$/.exec(lesson);
-            if (lessonParts) {
-              let lessonSection = lessonParts[1];
-              let lessonNumber = lessonParts[2];
-              let lessonSubsection = lessonParts[3];
-              if (lessonSection.includes("ワークブック") && lessonSection.includes("読")) {
-                lessonSection = lessonSection.replace("読", "")
-              }
-              if (lessonSubsection.includes("-")) {
-                lessonSubsection = lessonSubsection.replace("-", "")
-              }
-              if (searchRange.includes(lessonNumber) && vocab.includes(lessonSection) && vocab.includes(lessonSubsection)) {
-                console.log(dictionaryItem)
-              }
-            }else{
-              console.log("Could not parse: " + dictionaryItem.l)
-            }
+    dictionaryItemKeeperChecker : function (lesson, searchRange) {
+      lesson = lesson.trim();
+      let lessonParts = ""
+      if (lesson != "会G" && lesson != "Grammar Index" && lesson != "巻末") {
+        lessonParts = /^(.*)L(\d*)(.*)$/.exec(lesson);
+        if (lessonParts) {
+          let lessonSection = lessonParts[1];
+          let lessonNumber = lessonParts[2];
+          let lessonSubsection = lessonParts[3];
+          if (lessonSection.includes("ワークブック") && lessonSection.includes("読")) {
+            lessonSection = lessonSection.replace("読", "");
           }
+          if (lessonSubsection.includes("-")) {
+            lessonSubsection = lessonSubsection.replace("-", "");
+          }
+          if (!searchRange.includes(lessonNumber)) {
+            return false;
+          }
+          if (document.getElementById("cb-会").checked && lessonSection != "会") {
+            return false;
+          }
+          if (document.getElementById("cb-会").checked && lessonSection == "会" && document.getElementById("cb-(e)").checked && lessonSubsection != "(e)") {
+            return false;
+          }
+          if (document.getElementById("cb-読").checked && lessonSection != "読") {
+            return false;
+          }
+          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-漢字表").checked && lessonSubsection != "漢字表") {
+            return false;
+          }
+          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-ワークブック").checked && lessonSubsection != "ワークブック") {
+            return false;
+          }
+        }else {
+          console.log("Could not parse: " + dictionaryItem.l);
+          return false;
         }
+        return true;
+      }else {
+        return false;
       }
-      //document.getElementById('study-tool-json').value = kana_list.join(",");
     },
-*/
+
     jishoParser : function (searchRange) {
       for (const [mora, dictionaryItems] of Object.entries(Genki.jisho)) {
         console.log(mora);
         for (const dictionaryItem of dictionaryItems) {
+          let include = false;
           for (let lesson of dictionaryItem.l.split(",")) {
-            lesson = lesson.trim();
-            let lessonParts = ""
-            if (lesson != "会G" && lesson != "Grammar Index" && lesson != "巻末") {
-              lessonParts = /^(.*)L(\d*)(.*)$/.exec(lesson);
-              if (lessonParts) {
-                let lessonSection = lessonParts[1];
-                let lessonNumber = lessonParts[2];
-                let lessonSubsection = lessonParts[3];
-                if (lessonSection.includes("ワークブック") && lessonSection.includes("読")) {
-                  lessonSection = lessonSection.replace("読", "")
-                }
-                if (lessonSubsection.includes("-")) {
-                  lessonSubsection = lessonSubsection.replace("-", "")
-                }
-                if (searchRange.includes(lessonNumber) && dictionaryItem.l.includes(lessonSection) && dictionaryItem.l.includes(lessonSubsection)) {
-                  console.log("yay!!!" + dictionaryItem.ja)
-                }
-              }else {
-                console.log("Could not parse: " + dictionaryItem.l)
-              }
+            if (this.dictionaryItemKeeperChecker(lesson, searchRange)) {
+              include = true;
+              break;
             }
-            
-            
+          }
+          if (include) {
+            console.log("Success: " + dictionaryItem.ja);
           }
         }
       }
     },
+    
     /*
-    parse l from jisho
-    make checkboxes for sections of lessons
-    for loop over genki.jisho[*]
+    when conv/grammar and useful expressions are checked, it finds less than if just conv/grammar is checked
+
+    debug to look at how it keeps specific words
     */
 
     // initialize the study session after asking for confirmation
