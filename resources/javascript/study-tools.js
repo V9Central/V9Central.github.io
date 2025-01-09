@@ -280,26 +280,29 @@
           if (!searchRange.includes(lessonNumber)) {
             return false;
           }
-          if (document.getElementById("cb-会").checked && lessonSection != "会") {
-            return false;
+          if (document.getElementById("cb-会").checked && lessonSection == "会" && lessonSubsection == "") {
+            return true;
           }
-          if (document.getElementById("cb-会").checked && lessonSection == "会" && document.getElementById("cb-(e)").checked && lessonSubsection != "(e)") {
-            return false;
+          if (document.getElementById("cb-会").checked && lessonSection == "会" && document.getElementById("cb-(e)").checked && lessonSubsection == "(e)") {
+            return true;
           }
-          if (document.getElementById("cb-読").checked && lessonSection != "読") {
-            return false;
+          if (document.getElementById("cb-会").checked && lessonSection == "会" && document.getElementById("cb-(c)").checked && lessonSubsection == "(c)") {
+            return true;
           }
-          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-漢字表").checked && lessonSubsection != "漢字表") {
-            return false;
+          if (document.getElementById("cb-読").checked && lessonSection == "読" && lessonSubsection == "") {
+            return true;
           }
-          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-ワークブック").checked && lessonSubsection != "ワークブック") {
-            return false;
+          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-漢字表").checked && lessonSubsection == "漢字表") {
+            return true;
+          }
+          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-ワークブック").checked && lessonSubsection == "ワークブック") {
+            return true;
           }
         }else {
           console.log("Could not parse: " + dictionaryItem.l);
           return false;
         }
-        return true;
+        return false;
       }else {
         return false;
       }
@@ -324,9 +327,7 @@
     },
     
     /*
-    when conv/grammar and useful expressions are checked, it finds less than if just conv/grammar is checked
-
-    debug to look at how it keeps specific words
+    culture notes/useful expressions dont find anything when solo
     */
 
     // initialize the study session after asking for confirmation
