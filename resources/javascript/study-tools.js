@@ -237,11 +237,12 @@
       if (input == "") {
         input = "1-23"
       }
-      let start = input.split("-")[0]
-      let end = input.split("-")[1]
-      end++
+      let inputParts = input.split("-");
+      let start = inputParts[0];
+      let end = (inputParts.length == 2 && inputParts[1] != "" ? inputParts[1] : 23);
+      end++;
       for (let i = start; i < end; i++) {
-        output.push(i);
+        output.push(i.toString());
       }
       return output;
     },
@@ -252,8 +253,8 @@
       let parsedRange = [];
       
       for (const item of range) {
-        if (item.includes("-")) {
-          parsedRange.push(this.rangeParse(item))
+        if (item.includes("-") || item == "") {
+          parsedRange = parsedRange.concat(this.rangeParse(item))
         }else {
           parsedRange.push(item)
         }
@@ -283,19 +284,19 @@
           if (document.getElementById("cb-会").checked && lessonSection == "会" && lessonSubsection == "") {
             return true;
           }
-          if (document.getElementById("cb-会").checked && lessonSection == "会" && document.getElementById("cb-(e)").checked && lessonSubsection == "(e)") {
+          if (lessonSection == "会" && document.getElementById("cb-(e)").checked && lessonSubsection == "(e)") {
             return true;
           }
-          if (document.getElementById("cb-会").checked && lessonSection == "会" && document.getElementById("cb-(c)").checked && lessonSubsection == "(c)") {
+          if (lessonSection == "会" && document.getElementById("cb-(c)").checked && lessonSubsection == "(c)") {
             return true;
           }
           if (document.getElementById("cb-読").checked && lessonSection == "読" && lessonSubsection == "") {
             return true;
           }
-          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-漢字表").checked && lessonSubsection == "漢字表") {
+          if (lessonSection == "読" && document.getElementById("cb-漢字表").checked && lessonSubsection == "漢字表") {
             return true;
           }
-          if (document.getElementById("cb-読").checked && lessonSection == "読" && document.getElementById("cb-ワークブック").checked && lessonSubsection == "ワークブック") {
+          if (lessonSection == "読" && document.getElementById("cb-ワークブック").checked && lessonSubsection == "ワークブック") {
             return true;
           }
         }else {
