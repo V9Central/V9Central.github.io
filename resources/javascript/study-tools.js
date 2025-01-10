@@ -259,7 +259,6 @@
           parsedRange.push(item)
         }
       }
-      document.getElementById('study-tool-json').value = parsedRange.join(",");
       this.jishoParser(parsedRange);
     },
 
@@ -310,6 +309,7 @@
     },
 
     jishoParser : function (searchRange) {
+      let finalJSON = {};
       for (const [mora, dictionaryItems] of Object.entries(Genki.jisho)) {
         console.log(mora);
         for (const dictionaryItem of dictionaryItems) {
@@ -321,10 +321,11 @@
             }
           }
           if (include) {
-            console.log("Success: " + dictionaryItem.ja);
+            finalJSON[dictionaryItem.ja] = dictionaryItem.en;
           }
         }
       }
+      document.getElementById('study-tool-json').value = JSON.stringify(finalJSON);
     },
     
     /*
