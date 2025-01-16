@@ -326,11 +326,39 @@
         }
       }
       document.getElementById('study-tool-json').value = JSON.stringify(finalJSON);
+
+      document.getElementById("word-count").innerText = "Number of words selected: " + Object.keys(finalJSON).length;
     },
     
-    /*
-    culture notes/useful expressions dont find anything when solo
-    */
+    modeSelect : function (radioButton) {
+      let manualSection = document.getElementById("manual-entry-section");
+      let chapterSelectSection = document.getElementById("chapter-select-section");
+      let tipsSection = document.getElementById("tips-section");
+
+      if (radioButton.value == "manual-entry") {
+        if (manualSection.getAttribute("hidden")) {
+          manualSection.removeAttribute("hidden");
+        }
+        if (tipsSection.getAttribute("hidden")) {
+          tipsSection.removeAttribute("hidden");
+        }
+
+        if (!chapterSelectSection.getAttribute("hidden")) {
+          chapterSelectSection.setAttribute("hidden", "hidden");
+        }
+      }else {
+        if (!manualSection.getAttribute("hidden")) {
+          manualSection.setAttribute("hidden", "hidden");
+        }
+        if (!tipsSection.getAttribute("hidden")) {
+          tipsSection.setAttribute("hidden", "hidden");
+        }
+
+        if (chapterSelectSection.getAttribute("hidden")) {
+          chapterSelectSection.removeAttribute("hidden");
+        }
+      }
+    },
 
     // initialize the study session after asking for confirmation
     study : function () {
