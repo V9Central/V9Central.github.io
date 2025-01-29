@@ -339,10 +339,13 @@
                   while (k --> 0) {
                     if (answers.length) {
                       n2 = Math.floor(Math.random() * answers.length);
-                      answer = o.quizlet[answers[n2]].replace(/\|.*?$/, '');
-                      
+                      answer = o.quizlet[answers[n2]].replace(/\|.*$/, '');
+                      var answerParts = answers[n2].split("|")
+
                       // prevent identical answers from showing
                       if (answer == currentAnswer) {
+                        k++; // increment to try another
+                      }else if ((def.length == 3 && def[2] && answerParts.length != 3) || (answerParts.length == 3 && answerParts[2] == "")) {
                         k++; // increment to try another
                       }
                       // otherwise add a new answer if it's not identical

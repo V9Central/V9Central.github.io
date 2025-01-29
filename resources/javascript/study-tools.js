@@ -214,24 +214,7 @@
       }
     },
 
-    showCheckboxes : function (section) {
-      if (section.id == "cb-読" && section.checked) {
-        document.getElementById("extra-reading-sections").style = "display:normal"
-      }
-      
-      if (section.id == "cb-読" && !section.checked) {
-        document.getElementById("extra-reading-sections").style = "display:none"
-      }
-
-      if (section.id == "cb-会" && section.checked) {
-        document.getElementById("extra-conversation-sections").style = "display:normal"
-      }
-
-      if (section.id == "cb-会" && !section.checked) {
-        document.getElementById("extra-conversation-sections").style = "display:none"
-      }
-    },
-
+    // take the input in the chapter select range input - parse dashes into the full range of numbers
     rangeParse : function (input) {
       const output = [];
       if (input == "") {
@@ -247,6 +230,7 @@
       return output;
     },
   
+    // function that uses rangeparse and sends to jishoparser
     selectChapters : function () {
       const range = document.getElementById("chapter-select-input").value.split(",")
 
@@ -262,6 +246,7 @@
       this.jishoParser(parsedRange);
     },
 
+    // function that determines whether each word is needed or not based on checkboxes
     dictionaryItemKeeperChecker : function (lesson, searchRange) {
       lesson = lesson.trim();
       let lessonParts = ""
@@ -308,6 +293,7 @@
       }
     },
 
+    // function that uses dictionaryitemkeeperchecker to build the finalJSON list of vocab
     jishoParser : function (searchRange) {
       let finalJSON = {};
       for (const [mora, dictionaryItems] of Object.entries(Genki.jisho)) {
@@ -321,7 +307,16 @@
             }
           }
           if (include) {
-            finalJSON[dictionaryItem.ja] = dictionaryItem.en;
+            if ("v" in dictionaryItem) {
+              if (dictionaryItem.ja.includes("|")) {
+                finalJSON[dictionaryItem.ja + "|" + dictionaryItem.v] = dictionaryItem.en;
+              }else {
+                finalJSON[dictionaryItem.ja + "||" + dictionaryItem.v] = dictionaryItem.en;
+              }
+            }else {
+              finalJSON[dictionaryItem.ja] = dictionaryItem.en;
+            }
+            
           }
         }
       }
@@ -330,6 +325,7 @@
       document.getElementById("word-count").innerText = "Number of words selected: " + Object.keys(finalJSON).length;
     },
     
+    // function to switch between manual entry and chapter  select
     modeSelect : function (radioButton) {
       let manualSection = document.getElementById("manual-entry-section");
       let chapterSelectSection = document.getElementById("chapter-select-section");
